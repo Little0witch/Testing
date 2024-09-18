@@ -20,9 +20,13 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
     void initComPort();
+    QList<qint32> getBaundRatesComPort();
+    void readData();
+    void showDataASCII(QString);
 
 private slots:
     void on_comboBoxComPorts_currentIndexChanged(int index);
+    void on_comboBoxSpeed_activated(int index);
 
 private:
     Ui::MainWindow *ui;
