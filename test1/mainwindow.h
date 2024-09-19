@@ -29,7 +29,7 @@ public:
     void readData();
     void showDataASCII(QString);
     void writeJSON(QString);
-    void translateASCII(QString);
+    classInformationSensor translateASCII(QString);
 
 private slots:
     void on_comboBoxComPorts_currentIndexChanged(int index);

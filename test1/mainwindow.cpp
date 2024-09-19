@@ -87,20 +87,18 @@ void MainWindow::readData()
     QByteArray data = serialPort.readAll();
     QString message = QString::fromUtf8(data);
 
-    classInformationSensor informationSensor;
 
-    QDateTime time = QDateTime::currentDateTime();
-    QString timeOnly = time.toString("hh:mm:ss");
-        qDebug() << timeOnly;
-    informationSensor.setInfrmation(timeOnly, "Name", 14, 10);
-    informationSensor.showClass();
-    // informationSensor()
-    // ui->textBrowserASCII->append(message);
-    // Вывод в QTextBrowser без добавления лишних переводов строк
+    // classInformationSensor informationSensor;
+    // QDateTime time = QDateTime::currentDateTime();
+    // QString timeOnly = time.toString("hh:mm:ss");
+    // informationSensor.setInfrmation(timeOnly, "Name", 14, 10);
+    // informationSensor.showClass();
+
     ui->textBrowserASCII->insertPlainText(message);
-
     // Прокрутка вниз для отображения новых данных
     ui->textBrowserASCII->moveCursor(QTextCursor::End);
+
+    classInformationSensor informationSensor = translateASCII(message);
     writeJSON(message);
 }
 
@@ -119,9 +117,20 @@ void MainWindow::writeJSON(QString data)
     file.close();
 }
 
-void MainWindow::translateASCII(QString data)
+classInformationSensor MainWindow::translateASCII(QString data)
 {
-
+    classInformationSensor informationSensor;
+    QString time = QTime::currentTime().toString("hh:mm:ss");
+    QString nameSensor = "WMT700";
+    if (data.startsWith("$") && data.endsWith("\r\n")){
+        data = data.mid(1,(data.length()-3));
+        QStringList listData = data.split(",");
+        // что-то не так в инты превращает
+        informationSensor.setInfrmation(time, nameSensor, listData.first().toInt(), listData.last().toInt());
+    }
+    informationSensor.showClass();
+    // qDebug() << data;
+    return informationSensor;
 }
 
 
