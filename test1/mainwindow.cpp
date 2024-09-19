@@ -7,8 +7,13 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     initComPort();
-
+    file.setFileName("test1.json");
     connect(&serialPort, &QSerialPort::readyRead, this, &MainWindow::readData);
+
+    // обработка обновления списка портов
+    // QTimer* timer = new QTimer(this);
+    // connect(timer, &QTimer::timeout, this, &MainWindow::initComPort);
+    // timer->start(5000);  // обновление списка каждые 5 секунд
 
 }
 
@@ -51,7 +56,7 @@ void MainWindow::initComPort()
             if (serialPort.open(QIODevice::ReadWrite))
                 break;
         }
-        serialPort.setBaudRate(QSerialPort::Baud9600);
+        serialPort.setBaudRate(QSerialPort::Baud2400);
         serialPort.setDataBits(QSerialPort::Data8);
         serialPort.setStopBits(QSerialPort::OneStop);
         serialPort.setParity(QSerialPort::NoParity);
@@ -81,19 +86,65 @@ void MainWindow::readData()
 {
     QByteArray data = serialPort.readAll();
     QString message = QString::fromUtf8(data);
-    qDebug() << message;
+
+    classInformationSensor informationSensor;
+
+    QDateTime time = QDateTime::currentDateTime();
+    QString timeOnly = time.toString("hh:mm:ss");
+        qDebug() << timeOnly;
+    informationSensor.setInfrmation(timeOnly, "Name", 14, 10);
+    informationSensor.showClass();
+    // informationSensor()
     // ui->textBrowserASCII->append(message);
     // Вывод в QTextBrowser без добавления лишних переводов строк
     ui->textBrowserASCII->insertPlainText(message);
 
     // Прокрутка вниз для отображения новых данных
     ui->textBrowserASCII->moveCursor(QTextCursor::End);
+    writeJSON(message);
 }
+
+// не работает!!!
+void MainWindow::writeJSON(QString data)
+{
+    QJsonObject recordObject;
+    recordObject.insert("Test1", QJsonValue::fromVariant(data));
+    QJsonDocument doc(recordObject);
+    QString jsonString = doc.toJson(QJsonDocument::Indented);
+
+    file.setFileName("test1.json");
+    file.open(QIODevice::WriteOnly | QIODevice::Text);
+    QTextStream stream( &file );
+    stream << jsonString;
+    file.close();
+}
+
+void MainWindow::translateASCII(QString data)
+{
+
+}
+
 
 void MainWindow::on_comboBoxComPorts_currentIndexChanged(int index)
 {
     // установка нового порта
+    QString newNamePort = listAvailableComPort[index].portName();
+    if (serialPort.portName() != newNamePort)
+    {
+        QSerialPort tmpPort;
+        tmpPort.setPortName(newNamePort);
+        if (!tmpPort.open(QIODevice::ReadWrite)){
+            QMessageBox::critical(this,"Error", "This port is not available!");
+            ui->comboBoxComPorts->setCurrentText(serialPort.portName());
+            tmpPort.close();
+        }
+        else {
+            serialPort.setPortName(newNamePort);
+            tmpPort.close();
+        }
+    }
     serialPort.setPort(listAvailableComPort[index]);
+
 }
 
 void MainWindow::on_comboBoxSpeed_activated(int index)
