@@ -7,22 +7,22 @@ class classInformationSensor
 private:
     QString time;
     QString nameSensor;
-    qint8 windSpeed;
-    qint8 windDirection;
+    float windSpeed;
+    float windDirection;
 
 public:
     classInformationSensor();
-    classInformationSensor(QString, QString, int, int);
-    QString getTime();
-    QString getNameSensor();
-    int getWindSpeed();
-    int getWindDirection();
+    classInformationSensor(QString, QString, float, float);
+    QString getTime() const;
+    QString getNameSensor() const;
+    float getWindSpeed() const;
+    float getWindDirection() const;
     void setTime(QString);
     void setNameSensor(QString);
-    void setWindSpeed(int);
-    void setWindDirection(int);
-    void showClass();
-    void setInfrmation(QString, QString, int, int);
+    void setWindSpeed(float);
+    void setWindDirection(float);
+    QString classToString();
+    void setInfrmation(QString, QString, float, float);
 
 };
 

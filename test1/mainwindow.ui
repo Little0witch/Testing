@@ -98,9 +98,9 @@
    <widget class="QFrame" name="frameASCII">
     <property name="geometry">
      <rect>
-      <x>120</x>
-      <y>300</y>
-      <width>501</width>
+      <x>300</x>
+      <y>20</y>
+      <width>281</width>
       <height>241</height>
      </rect>
     </property>
@@ -131,7 +131,7 @@
       <rect>
        <x>20</x>
        <y>41</y>
-       <width>461</width>
+       <width>241</width>
        <height>181</height>
       </rect>
      </property>
@@ -140,9 +140,9 @@
    <widget class="QFrame" name="frameResult">
     <property name="geometry">
      <rect>
-      <x>390</x>
-      <y>30</y>
-      <width>321</width>
+      <x>40</x>
+      <y>310</y>
+      <width>521</width>
       <height>221</height>
      </rect>
     </property>
@@ -173,7 +173,7 @@
       <rect>
        <x>20</x>
        <y>40</y>
-       <width>256</width>
+       <width>481</width>
        <height>151</height>
       </rect>
      </property>

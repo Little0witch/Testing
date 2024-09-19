@@ -7,24 +7,24 @@ classInformationSensor::classInformationSensor() {
     this->windDirection = 0;  // Направление ветра по умолчанию
 }
 
-classInformationSensor::classInformationSensor(QString time, QString nameSensor, int windSpeed, int windDirection) {
+classInformationSensor::classInformationSensor(QString time, QString nameSensor, float windSpeed, float windDirection) {
     this->time = time;
     this->nameSensor = nameSensor;
     this->windSpeed = windSpeed;
     this->windDirection = windDirection;
 }
 
-QString classInformationSensor::getTime(){
+QString classInformationSensor::getTime() const{
     return time;
 }
 
-QString classInformationSensor::getNameSensor(){
+QString classInformationSensor::getNameSensor() const{
     return nameSensor;
 }
-int classInformationSensor::getWindSpeed(){
+float classInformationSensor::getWindSpeed() const{
     return windSpeed;
 }
-int classInformationSensor::getWindDirection(){
+float classInformationSensor::getWindDirection() const{
     return windDirection;
 }
 
@@ -36,24 +36,25 @@ void classInformationSensor::setNameSensor(QString name){
     this->nameSensor = name;
 }
 
-void classInformationSensor::setWindSpeed(int speed){
+void classInformationSensor::setWindSpeed(float speed){
     this->windSpeed = speed;
 }
 
-void classInformationSensor::setWindDirection(int direction){
+void classInformationSensor::setWindDirection(float direction){
     this->windDirection = direction;
 }
 
-void classInformationSensor::setInfrmation(QString time, QString name, int speed, int direction){
+void classInformationSensor::setInfrmation(QString time, QString name, float speed, float direction){
     setTime(time);
     setNameSensor(name);
     setWindSpeed(speed);
     setWindDirection(direction);
 }
 
-void classInformationSensor::showClass(){
-    QString output;
-    output = "Time: " + time + ",nameSensor: " + nameSensor
-             + ",Speed: " + QString::number(windSpeed) + ",Direction: " + QString::number(windDirection) + ";";
-    qDebug() << output;
+QString classInformationSensor::classToString(){
+    return QString("Time: %1, Sensor: %2, Wind Speed: %3, Wind Direction: %4")
+        .arg(time)
+        .arg(nameSensor)
+        .arg(QString::number(windSpeed, 'f', 2))
+        .arg(QString::number(windDirection, 'f', 2));
 }

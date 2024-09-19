@@ -7,7 +7,7 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     initComPort();
-    file.setFileName("test1.json");
+    // file.setFileName("test1.json");
     connect(&serialPort, &QSerialPort::readyRead, this, &MainWindow::readData);
 
     // обработка обновления списка портов
@@ -42,7 +42,6 @@ void MainWindow::initComPort()
         // заполнение выпадающего списка доступными портами
             ui->comboBoxComPorts->addItem(itemComPort.portName());
         }
-
 
         // занесение в боксы скорости
         QList<qint32> listBaundRatesComPort = getBaundRatesComPort();
@@ -87,34 +86,31 @@ void MainWindow::readData()
     QByteArray data = serialPort.readAll();
     QString message = QString::fromUtf8(data);
 
-
-    // classInformationSensor informationSensor;
-    // QDateTime time = QDateTime::currentDateTime();
-    // QString timeOnly = time.toString("hh:mm:ss");
-    // informationSensor.setInfrmation(timeOnly, "Name", 14, 10);
-    // informationSensor.showClass();
-
     ui->textBrowserASCII->insertPlainText(message);
     // Прокрутка вниз для отображения новых данных
     ui->textBrowserASCII->moveCursor(QTextCursor::End);
 
     classInformationSensor informationSensor = translateASCII(message);
-    writeJSON(message);
+    ui->textBrowserResult->append(informationSensor.classToString());
+    writeJSON(informationSensor);
 }
 
-// не работает!!!
-void MainWindow::writeJSON(QString data)
+void MainWindow::writeJSON(const classInformationSensor& data)
 {
-    QJsonObject recordObject;
-    recordObject.insert("Test1", QJsonValue::fromVariant(data));
-    QJsonDocument doc(recordObject);
-    QString jsonString = doc.toJson(QJsonDocument::Indented);
+    QString jsonString = QString("{\"time\":\"%1\",\"name_sensor\":\"%2\",\"speed\":\"%3\",\"direction\":\"%4\"}")
+                             .arg(data.getTime())
+                             .arg(data.getNameSensor())
+                             .arg(QString::number(data.getWindSpeed(), 'f', 2))
+                             .arg(QString::number(data.getWindDirection(), 'f', 2));
 
-    file.setFileName("test1.json");
-    file.open(QIODevice::WriteOnly | QIODevice::Text);
-    QTextStream stream( &file );
-    stream << jsonString;
-    file.close();
+    QFile file("sensor_data.json");
+    if (file.open(QIODevice::Append | QIODevice::Text)) {
+        QTextStream out(&file);
+        out << jsonString << "\n";  // Дописываем в файл строку
+        file.close();
+    } else {
+        qDebug() << "Error opening file for writing!";
+    }
 }
 
 classInformationSensor MainWindow::translateASCII(QString data)
@@ -125,11 +121,12 @@ classInformationSensor MainWindow::translateASCII(QString data)
     if (data.startsWith("$") && data.endsWith("\r\n")){
         data = data.mid(1,(data.length()-3));
         QStringList listData = data.split(",");
-        // что-то не так в инты превращает
-        informationSensor.setInfrmation(time, nameSensor, listData.first().toInt(), listData.last().toInt());
+        informationSensor.setInfrmation(time, nameSensor, listData.first().toFloat(), listData.last().toFloat());
+        informationSensor.classToString();
     }
-    informationSensor.showClass();
-    // qDebug() << data;
+    else{
+        QMessageBox::information(this,"Information", "Incorrect data.");
+    }
     return informationSensor;
 }
 

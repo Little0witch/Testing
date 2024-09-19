@@ -28,7 +28,7 @@ public:
     QList<qint32> getBaundRatesComPort();
     void readData();
     void showDataASCII(QString);
-    void writeJSON(QString);
+    void writeJSON(const classInformationSensor&);
     classInformationSensor translateASCII(QString);
 
 private slots:
