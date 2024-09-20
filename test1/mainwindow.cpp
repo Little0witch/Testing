@@ -10,6 +10,13 @@ MainWindow::MainWindow(QWidget *parent)
     // file.setFileName("test1.json");
     connect(&serialPort, &QSerialPort::readyRead, this, &MainWindow::readData);
 
+    // QDir dir;
+    // QString pathProg = dir.absolutePath();
+    // // qDebug() << path_prog;
+    // int index = pathProg.indexOf("test1");
+    // QString pathToSaveJSON = pathProg.mid(0,index);
+    // qDebug() << pathToSaveJSON;
+
     // обработка обновления списка портов
     // QTimer* timer = new QTimer(this);
     // connect(timer, &QTimer::timeout, this, &MainWindow::initComPort);
@@ -65,6 +72,14 @@ void MainWindow::initComPort()
     }
 }
 
+void MainWindow::getPathToSaveJSON()
+{
+    QDir dir;
+    QString pathProg = dir.absolutePath();
+    int index = pathProg.indexOf("test1");
+    pathToSaveJSON = pathProg.mid(0,index) + "sensor_data.json";
+}
+
 // просто удобный список с возможными скоростями
 QList<qint32> MainWindow::getBaundRatesComPort(){
 
@@ -102,8 +117,7 @@ void MainWindow::writeJSON(const classInformationSensor& data)
                              .arg(data.getNameSensor())
                              .arg(QString::number(data.getWindSpeed(), 'f', 2))
                              .arg(QString::number(data.getWindDirection(), 'f', 2));
-
-    QFile file("sensor_data.json");
+    file.setFileName(pathToSaveJSON);
     if (file.open(QIODevice::Append | QIODevice::Text)) {
         QTextStream out(&file);
         out << jsonString << "\n";  // Дописываем в файл строку

@@ -10,6 +10,7 @@
 #include <QJsonDocument>
 #include <QTimer>
 #include <classinformationsensor.h>
+#include <QDir>
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -25,6 +26,7 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
     void initComPort();
+    void getPathToSaveJSON();
     QList<qint32> getBaundRatesComPort();
     void readData();
     void showDataASCII(QString);
@@ -40,5 +42,6 @@ private:
     QList<QSerialPortInfo> listAvailableComPort; // списк всех доступных портов
     QSerialPort serialPort; // выбранный порт
     QFile file;
+    QString pathToSaveJSON;
 };
 #endif // MAINWINDOW_H
