@@ -7,20 +7,14 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     initComPort();
-    // file.setFileName("test1.json");
+    getPathToSaveJSON();
     connect(&serialPort, &QSerialPort::readyRead, this, &MainWindow::readData);
 
-    // QDir dir;
-    // QString pathProg = dir.absolutePath();
-    // // qDebug() << path_prog;
-    // int index = pathProg.indexOf("test1");
-    // QString pathToSaveJSON = pathProg.mid(0,index);
-    // qDebug() << pathToSaveJSON;
 
     // обработка обновления списка портов
-    // QTimer* timer = new QTimer(this);
-    // connect(timer, &QTimer::timeout, this, &MainWindow::initComPort);
-    // timer->start(5000);  // обновление списка каждые 5 секунд
+    QTimer* timer = new QTimer(this);
+    connect(timer, &QTimer::timeout, this, &MainWindow::updateComPorts);
+    timer->start(5000);  // обновление списка каждые 5 секунд
 
 }
 
@@ -32,11 +26,29 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+QList<QSerialPortInfo> MainWindow::getAvailablePorts(){
+    return QSerialPortInfo::availablePorts();
+}
+
+bool MainWindow::isChangeAvailableListPorts(){
+    QList<QSerialPortInfo> tmpList = getAvailablePorts();
+    if (tmpList.size() != listAvailableComPort.size()) {
+        qDebug() << "List change (size)";
+        return true;
+    }
+    for (int i = 0; i < tmpList.size(); ++i) {
+        if (tmpList[i].portName() != listAvailableComPort[i].portName()) {
+            qDebug() << "List change (ports)";
+            return true;
+        }
+    }
+    return false;
+}
 
 void MainWindow::initComPort()
 {
     listAvailableComPort.clear(); // очистка списка
-    listAvailableComPort = QSerialPortInfo::availablePorts(); // информация о доступных портах
+    listAvailableComPort = getAvailablePorts(); // информация о доступных портах
     // проверка наличия com-портов
     if (listAvailableComPort.empty()){
         QMessageBox::critical(this, "Error", "No com ports available. The program will be closed.");
@@ -69,6 +81,27 @@ void MainWindow::initComPort()
         serialPort.setFlowControl(QSerialPort::NoFlowControl);
         // установка скорости по-умолчанию в comboBox
         ui->comboBoxSpeed->setCurrentText(QString::number(serialPort.baudRate()));
+    }
+}
+
+void MainWindow::updateComPorts(){
+    if (isChangeAvailableListPorts()){
+        listAvailableComPort.clear(); // очистка списка
+        listAvailableComPort = getAvailablePorts(); // информация о доступных портах
+        if (listAvailableComPort.empty()){
+            QMessageBox::critical(this, "Error", "No com ports available. The program will be closed.");
+            exit(3); // вывод сообщения и закрытие программы
+        }
+        else{
+            ui->comboBoxComPorts->clear(); // очистка бокса
+            for(const QSerialPortInfo& itemComPort : listAvailableComPort){
+                // заполнение выпадающего списка доступными портами
+                ui->comboBoxComPorts->addItem(itemComPort.portName());
+            }
+            ui->comboBoxComPorts->setCurrentText(serialPort.portName());
+            // установка скорости по-умолчанию в comboBox
+            ui->comboBoxSpeed->setCurrentText(QString::number(serialPort.baudRate()));
+        }
     }
 }
 
@@ -117,7 +150,7 @@ void MainWindow::writeJSON(const classInformationSensor& data)
                              .arg(data.getNameSensor())
                              .arg(QString::number(data.getWindSpeed(), 'f', 2))
                              .arg(QString::number(data.getWindDirection(), 'f', 2));
-    file.setFileName(pathToSaveJSON);
+    QFile file(pathToSaveJSON);
     if (file.open(QIODevice::Append | QIODevice::Text)) {
         QTextStream out(&file);
         out << jsonString << "\n";  // Дописываем в файл строку
@@ -145,10 +178,11 @@ classInformationSensor MainWindow::translateASCII(QString data)
 }
 
 
+// что-то не так с обновлением портов
 void MainWindow::on_comboBoxComPorts_currentIndexChanged(int index)
 {
     // установка нового порта
-    QString newNamePort = listAvailableComPort[index].portName();
+    QString newNamePort = ui->comboBoxComPorts->currentText();
     if (serialPort.portName() != newNamePort)
     {
         QSerialPort tmpPort;
@@ -159,11 +193,13 @@ void MainWindow::on_comboBoxComPorts_currentIndexChanged(int index)
             tmpPort.close();
         }
         else {
-            serialPort.setPortName(newNamePort);
+            serialPort.close();
             tmpPort.close();
+            serialPort.setPortName(newNamePort);
+            // serialPort.setPort(listAvailableComPort[index]);
+            serialPort.open(QIODevice::ReadWrite);
         }
     }
-    serialPort.setPort(listAvailableComPort[index]);
 
 }
 

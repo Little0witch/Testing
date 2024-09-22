@@ -25,7 +25,10 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+    QList<QSerialPortInfo> getAvailablePorts();
+    bool isChangeAvailableListPorts();
     void initComPort();
+    void updateComPorts();
     void getPathToSaveJSON();
     QList<qint32> getBaundRatesComPort();
     void readData();
@@ -41,7 +44,6 @@ private:
     Ui::MainWindow *ui;
     QList<QSerialPortInfo> listAvailableComPort; // списк всех доступных портов
     QSerialPort serialPort; // выбранный порт
-    QFile file;
     QString pathToSaveJSON;
 };
 #endif // MAINWINDOW_H
