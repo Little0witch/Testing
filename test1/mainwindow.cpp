@@ -177,9 +177,14 @@ classInformationSensor MainWindow::translateASCII(QString data)
     return informationSensor;
 }
 
+void MainWindow::on_comboBoxSpeed_activated(int index)
+{
+    // установка скорости порта
+    serialPort.setBaudRate(getBaundRatesComPort()[index]);
+}
 
-// что-то не так с обновлением портов
-void MainWindow::on_comboBoxComPorts_currentIndexChanged(int index)
+
+void MainWindow::on_comboBoxComPorts_activated(int index)
 {
     // установка нового порта
     QString newNamePort = ui->comboBoxComPorts->currentText();
@@ -200,12 +205,5 @@ void MainWindow::on_comboBoxComPorts_currentIndexChanged(int index)
             serialPort.open(QIODevice::ReadWrite);
         }
     }
-
-}
-
-void MainWindow::on_comboBoxSpeed_activated(int index)
-{
-    // установка скорости порта
-    serialPort.setBaudRate(getBaundRatesComPort()[index]);
 }
 
