@@ -1,12 +1,50 @@
-{"time":"09:12:28","name_sensor":"WMT700","speed":"16.00","direction":"199.00"}
-{"time":"09:12:31","name_sensor":"WMT700","speed":"16.00","direction":"199.00"}
-{"time":"09:12:34","name_sensor":"WMT700","speed":"16.00","direction":"199.00"}
-{"time":"09:12:37","name_sensor":"WMT700","speed":"16.00","direction":"199.00"}
-{"time":"09:12:40","name_sensor":"WMT700","speed":"16.00","direction":"199.00"}
-{"time":"09:12:43","name_sensor":"WMT700","speed":"16.00","direction":"199.00"}
-{"time":"09:12:46","name_sensor":"WMT700","speed":"16.00","direction":"199.00"}
-{"time":"09:12:49","name_sensor":"WMT700","speed":"16.00","direction":"199.00"}
-{"time":"09:12:53","name_sensor":"WMT700","speed":"16.00","direction":"199.00"}
-{"time":"09:13:05","name_sensor":"WMT700","speed":"16.00","direction":"199.00"}
-{"time":"09:13:08","name_sensor":"WMT700","speed":"16.00","direction":"199.00"}
-{"time":"09:13:11","name_sensor":"WMT700","speed":"16.00","direction":"199.00"}
+[
+    {
+        "direction": 199,
+        "name_sensor": "WMT700",
+        "speed": 16,
+        "time": "18:10:07"
+    },
+    {
+        "direction": 199,
+        "name_sensor": "WMT700",
+        "speed": 16,
+        "time": "18:10:10"
+    },
+    {
+        "direction": 199,
+        "name_sensor": "WMT700",
+        "speed": 16,
+        "time": "18:10:13"
+    },
+    {
+        "direction": 13,
+        "name_sensor": "WMT700",
+        "speed": 16,
+        "time": "18:10:16"
+    },
+    {
+        "direction": 13,
+        "name_sensor": "WMT700",
+        "speed": 6,
+        "time": "18:10:19"
+    },
+    {
+        "direction": 20,
+        "name_sensor": "WMT700",
+        "speed": 6,
+        "time": "18:10:22"
+    },
+    {
+        "direction": 20,
+        "name_sensor": "WMT700",
+        "speed": 5,
+        "time": "18:10:25"
+    },
+    {
+        "direction": 200,
+        "name_sensor": "WMT700",
+        "speed": 10,
+        "time": "18:10:28"
+    }
+]

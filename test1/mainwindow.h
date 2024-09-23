@@ -11,6 +11,7 @@
 #include <QTimer>
 #include <classinformationsensor.h>
 #include <QDir>
+#include <QJsonArray>
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -46,5 +47,6 @@ private:
     QList<QSerialPortInfo> listAvailableComPort; // списк всех доступных портов
     QSerialPort serialPort; // выбранный порт
     QString pathToSaveJSON;
+    QJsonArray jsonArray;
 };
 #endif // MAINWINDOW_H

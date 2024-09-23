@@ -6,16 +6,15 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    initComPort();
-    getPathToSaveJSON();
+    initComPort(); // инициализация портов
+    getPathToSaveJSON(); // получение пути для сохранения JSON
+    // связка для работы с com-портом
     connect(&serialPort, &QSerialPort::readyRead, this, &MainWindow::readData);
-
 
     // обработка обновления списка портов
     QTimer* timer = new QTimer(this);
     connect(timer, &QTimer::timeout, this, &MainWindow::updateComPorts);
     timer->start(5000);  // обновление списка каждые 5 секунд
-
 }
 
 MainWindow::~MainWindow()
@@ -33,12 +32,10 @@ QList<QSerialPortInfo> MainWindow::getAvailablePorts(){
 bool MainWindow::isChangeAvailableListPorts(){
     QList<QSerialPortInfo> tmpList = getAvailablePorts();
     if (tmpList.size() != listAvailableComPort.size()) {
-        qDebug() << "List change (size)";
         return true;
     }
     for (int i = 0; i < tmpList.size(); ++i) {
         if (tmpList[i].portName() != listAvailableComPort[i].portName()) {
-            qDebug() << "List change (ports)";
             return true;
         }
     }
@@ -145,20 +142,34 @@ void MainWindow::readData()
 
 void MainWindow::writeJSON(const classInformationSensor& data)
 {
-    QString jsonString = QString("{\"time\":\"%1\",\"name_sensor\":\"%2\",\"speed\":\"%3\",\"direction\":\"%4\"}")
-                             .arg(data.getTime())
-                             .arg(data.getNameSensor())
-                             .arg(QString::number(data.getWindSpeed(), 'f', 2))
-                             .arg(QString::number(data.getWindDirection(), 'f', 2));
+    QJsonObject newEntry;
+    newEntry["time"] = data.getTime();
+    newEntry["name_sensor"] = data.getNameSensor();
+    newEntry["speed"] = data.getWindSpeed();
+    newEntry["direction"] = data.getWindDirection();
     QFile file(pathToSaveJSON);
-    if (file.open(QIODevice::Append | QIODevice::Text)) {
-        QTextStream out(&file);
-        out << jsonString << "\n";  // Дописываем в файл строку
+    if (file.open(QIODevice::ReadOnly)) {
+        QByteArray fileData = file.readAll();
         file.close();
-    } else {
-        qDebug() << "Error opening file for writing!";
+
+        // Читаем существующий массив JSON
+        QJsonDocument doc = QJsonDocument::fromJson(fileData);
+        if (!doc.isNull() && doc.isArray()) {
+            jsonArray = doc.array();
+        }
+    }
+
+    // Добавляем новый объект в массив
+    jsonArray.append(newEntry);
+
+    // Записываем обновленный массив в файл
+    if (file.open(QIODevice::WriteOnly)) {
+        QJsonDocument saveDoc(jsonArray);
+        file.write(saveDoc.toJson());
+        file.close();
     }
 }
+
 
 classInformationSensor MainWindow::translateASCII(QString data)
 {
