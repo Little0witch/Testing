@@ -31,7 +31,7 @@ public:
     void initComPort();
     void updateComPorts();
     void getPathToSaveJSON();
-    QList<qint32> getBaundRatesComPort();
+    QList<qint32> getBaudRatesComPort();
     void readData();
     void showDataASCII(QString);
     void writeJSON(const classInformationSensor&);
@@ -39,14 +39,13 @@ public:
 
 private slots:
     void on_comboBoxSpeed_activated(int index);
-
     void on_comboBoxComPorts_activated(int index);
 
 private:
     Ui::MainWindow *ui;
     QList<QSerialPortInfo> listAvailableComPort; // списк всех доступных портов
     QSerialPort serialPort; // выбранный порт
-    QString pathToSaveJSON;
-    QJsonArray jsonArray;
+    QString pathToSaveJSON; // путь к файлу
+    QJsonArray jsonArray; // массив данных JSON
 };
 #endif // MAINWINDOW_H

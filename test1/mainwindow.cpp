@@ -60,7 +60,7 @@ void MainWindow::initComPort()
         }
 
         // занесение в боксы скорости
-        QList<qint32> listBaundRatesComPort = getBaundRatesComPort();
+        QList<qint32> listBaundRatesComPort = getBaudRatesComPort();
         for(qint32 baundRate : listBaundRatesComPort){
             ui->comboBoxSpeed->addItem(QString::number(baundRate));
         }
@@ -111,7 +111,7 @@ void MainWindow::getPathToSaveJSON()
 }
 
 // просто удобный список с возможными скоростями
-QList<qint32> MainWindow::getBaundRatesComPort(){
+QList<qint32> MainWindow::getBaudRatesComPort(){
 
     QList<qint32> baudRates;
     baudRates << QSerialPort::Baud1200
@@ -143,7 +143,7 @@ void MainWindow::readData()
 void MainWindow::writeJSON(const classInformationSensor& data)
 {
     QJsonObject newEntry;
-    newEntry["time"] = data.getTime();
+    newEntry["time"] = data.getTime().toString(Qt::ISODate);
     newEntry["name_sensor"] = data.getNameSensor();
     newEntry["speed"] = data.getWindSpeed();
     newEntry["direction"] = data.getWindDirection();
@@ -174,12 +174,12 @@ void MainWindow::writeJSON(const classInformationSensor& data)
 classInformationSensor MainWindow::translateASCII(QString data)
 {
     classInformationSensor informationSensor;
-    QString time = QTime::currentTime().toString("hh:mm:ss");
+    // QString time = QTime::currentTime().toString("hh:mm:ss");
     QString nameSensor = "WMT700";
     if (data.startsWith("$") && data.endsWith("\r\n")){
         data = data.mid(1,(data.length()-3));
         QStringList listData = data.split(",");
-        informationSensor.setInfrmation(time, nameSensor, listData.first().toFloat(), listData.last().toFloat());
+        informationSensor.setInformation(QDateTime::currentDateTime(), nameSensor, listData.first().toFloat(), listData.last().toFloat());
         informationSensor.classToString();
     }
     else{
@@ -191,7 +191,7 @@ classInformationSensor MainWindow::translateASCII(QString data)
 void MainWindow::on_comboBoxSpeed_activated(int index)
 {
     // установка скорости порта
-    serialPort.setBaudRate(getBaundRatesComPort()[index]);
+    serialPort.setBaudRate(getBaudRatesComPort()[index]);
 }
 
 
