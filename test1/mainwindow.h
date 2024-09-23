@@ -37,7 +37,6 @@ public:
     classInformationSensor translateASCII(QString);
 
 private slots:
-    // void on_comboBoxComPorts_currentIndexChanged(int index);
     void on_comboBoxSpeed_activated(int index);
 
     void on_comboBoxComPorts_activated(int index);
