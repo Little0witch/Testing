@@ -8,6 +8,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     initComPort(); // инициализация портов
     getPathToSaveJSON(); // получение пути для сохранения JSON
+    ui->textBrowser->append(pathToSaveJSON);
     // связка для работы с com-портом
     connect(&serialPort, &QSerialPort::readyRead, this, &MainWindow::readData);
 
@@ -25,10 +26,12 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+// получение списка всех портов
 QList<QSerialPortInfo> MainWindow::getAvailablePorts(){
     return QSerialPortInfo::availablePorts();
 }
 
+//проверка на измнение портов
 bool MainWindow::isChangeAvailableListPorts(){
     QList<QSerialPortInfo> tmpList = getAvailablePorts();
     if (tmpList.size() != listAvailableComPort.size()) {
@@ -48,7 +51,7 @@ void MainWindow::initComPort()
     listAvailableComPort = getAvailablePorts(); // информация о доступных портах
     // проверка наличия com-портов
     if (listAvailableComPort.empty()){
-        QMessageBox::critical(this, "Error", "No com ports available. The program will be closed.");
+        QMessageBox::critical(this, "Error", "Нет доступных com-портов. Программа будет закрыта.");
         exit(3); // вывод сообщения и закрытие программы
     }
     else{
@@ -71,6 +74,7 @@ void MainWindow::initComPort()
             if (serialPort.open(QIODevice::ReadWrite))
                 break;
         }
+        // настройка порта
         serialPort.setBaudRate(QSerialPort::Baud2400);
         serialPort.setDataBits(QSerialPort::Data8);
         serialPort.setStopBits(QSerialPort::OneStop);
@@ -81,12 +85,13 @@ void MainWindow::initComPort()
     }
 }
 
+// обновление выпадающего спсика портов
 void MainWindow::updateComPorts(){
     if (isChangeAvailableListPorts()){
         listAvailableComPort.clear(); // очистка списка
         listAvailableComPort = getAvailablePorts(); // информация о доступных портах
         if (listAvailableComPort.empty()){
-            QMessageBox::critical(this, "Error", "No com ports available. The program will be closed.");
+            QMessageBox::critical(this, "Error", "Нет доступных com-портов. Программа будет закрыта.");
             exit(3); // вывод сообщения и закрытие программы
         }
         else{
@@ -102,10 +107,11 @@ void MainWindow::updateComPorts(){
     }
 }
 
+// получение пути для сохранения файла
 void MainWindow::getPathToSaveJSON()
 {
     QDir dir;
-    QString pathProg = dir.absolutePath();
+    QString pathProg = dir.absolutePath(); // путь к запускающемуся файлу
     int index = pathProg.indexOf("test1");
     pathToSaveJSON = pathProg.mid(0,index) + "sensor_data.json";
 }
@@ -126,6 +132,7 @@ QList<qint32> MainWindow::getBaudRatesComPort(){
 
 }
 
+// чтение данных
 void MainWindow::readData()
 {
     QByteArray data = serialPort.readAll();
@@ -140,6 +147,7 @@ void MainWindow::readData()
     writeJSON(informationSensor);
 }
 
+// запись в JSON
 void MainWindow::writeJSON(const classInformationSensor& data)
 {
     QJsonObject newEntry;
@@ -152,17 +160,17 @@ void MainWindow::writeJSON(const classInformationSensor& data)
         QByteArray fileData = file.readAll();
         file.close();
 
-        // Читаем существующий массив JSON
+        // Чтение существующего массива JSON
         QJsonDocument doc = QJsonDocument::fromJson(fileData);
         if (!doc.isNull() && doc.isArray()) {
             jsonArray = doc.array();
         }
     }
 
-    // Добавляем новый объект в массив
+    // Добавление нового объекта в массив
     jsonArray.append(newEntry);
 
-    // Записываем обновленный массив в файл
+    // Запись обновленного массива в файл
     if (file.open(QIODevice::WriteOnly)) {
         QJsonDocument saveDoc(jsonArray);
         file.write(saveDoc.toJson());
@@ -170,11 +178,10 @@ void MainWindow::writeJSON(const classInformationSensor& data)
     }
 }
 
-
+// перевод из ASCII в понятный человеку
 classInformationSensor MainWindow::translateASCII(QString data)
 {
     classInformationSensor informationSensor;
-    // QString time = QTime::currentTime().toString("hh:mm:ss");
     QString nameSensor = "WMT700";
     if (data.startsWith("$") && data.endsWith("\r\n")){
         data = data.mid(1,(data.length()-3));
@@ -183,18 +190,19 @@ classInformationSensor MainWindow::translateASCII(QString data)
         informationSensor.classToString();
     }
     else{
-        QMessageBox::information(this,"Information", "Incorrect data.");
+        QMessageBox::information(this,"Information", "Некорректные данные.");
     }
     return informationSensor;
 }
 
+// заполнение выпадающего бокса
 void MainWindow::on_comboBoxSpeed_activated(int index)
 {
     // установка скорости порта
     serialPort.setBaudRate(getBaudRatesComPort()[index]);
 }
 
-
+// изменение выпадающего списка портов
 void MainWindow::on_comboBoxComPorts_activated(int index)
 {
     // установка нового порта
@@ -204,7 +212,7 @@ void MainWindow::on_comboBoxComPorts_activated(int index)
         QSerialPort tmpPort;
         tmpPort.setPortName(newNamePort);
         if (!tmpPort.open(QIODevice::ReadWrite)){
-            QMessageBox::critical(this,"Error", "This port is not available!");
+            QMessageBox::critical(this,"Error", "Этот порт занят!");
             ui->comboBoxComPorts->setCurrentText(serialPort.portName());
             tmpPort.close();
         }

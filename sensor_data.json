@@ -58,5 +58,83 @@
         "WMT700",
         50,
         70
-    ]
+    ],
+    {
+        "direction": 70,
+        "name_sensor": "WMT700",
+        "speed": 50,
+        "time": "2024-09-24T20:07:02"
+    },
+    {
+        "direction": 70,
+        "name_sensor": "WMT700",
+        "speed": 50,
+        "time": "2024-09-24T20:07:05"
+    },
+    {
+        "direction": 70,
+        "name_sensor": "WMT700",
+        "speed": 50,
+        "time": "2024-09-24T20:07:08"
+    },
+    {
+        "direction": 70,
+        "name_sensor": "WMT700",
+        "speed": 50,
+        "time": "2024-09-24T20:07:11"
+    },
+    {
+        "direction": 70,
+        "name_sensor": "WMT700",
+        "speed": 50,
+        "time": "2024-09-24T20:13:10"
+    },
+    {
+        "direction": 70,
+        "name_sensor": "WMT700",
+        "speed": 50,
+        "time": "2024-09-24T20:13:13"
+    },
+    {
+        "direction": 70,
+        "name_sensor": "WMT700",
+        "speed": 50,
+        "time": "2024-09-24T20:13:16"
+    },
+    {
+        "direction": 15,
+        "name_sensor": "WMT700",
+        "speed": 78,
+        "time": "2024-09-25T10:23:16"
+    },
+    {
+        "direction": 15,
+        "name_sensor": "WMT700",
+        "speed": 78,
+        "time": "2024-09-25T10:23:19"
+    },
+    {
+        "direction": 93,
+        "name_sensor": "WMT700",
+        "speed": 12,
+        "time": "2024-09-25T10:23:32"
+    },
+    {
+        "direction": 93,
+        "name_sensor": "WMT700",
+        "speed": 12,
+        "time": "2024-09-25T10:23:35"
+    },
+    {
+        "direction": 93,
+        "name_sensor": "WMT700",
+        "speed": 12,
+        "time": "2024-09-25T10:25:44"
+    },
+    {
+        "direction": 93,
+        "name_sensor": "WMT700",
+        "speed": 12,
+        "time": "2024-09-25T10:25:47"
+    }
 ]
