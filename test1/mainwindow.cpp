@@ -34,9 +34,11 @@ QList<QSerialPortInfo> MainWindow::getAvailablePorts(){
 //проверка на измнение портов
 bool MainWindow::isChangeAvailableListPorts(){
     QList<QSerialPortInfo> tmpList = getAvailablePorts();
+    // изменение размерности списка
     if (tmpList.size() != listAvailableComPort.size()) {
         return true;
     }
+    // проверка на изменение элементов списка
     for (int i = 0; i < tmpList.size(); ++i) {
         if (tmpList[i].portName() != listAvailableComPort[i].portName()) {
             return true;
@@ -132,6 +134,19 @@ QList<qint32> MainWindow::getBaudRatesComPort(){
 
 }
 
+// проверка на корректность данных с помощью регулярного выражения
+bool MainWindow::isCorrectData(const QString& data)
+{
+    QRegularExpression regex(R"(\$[0-9]+\.[0-9]{2},[0-9]{3}\.[0-9]{2})");
+    QRegularExpressionMatch match = regex.match(data);
+    if (match.hasMatch()){
+        return true;
+    }
+    else{
+        return false;
+    }
+}
+
 // чтение данных
 void MainWindow::readData()
 {
@@ -141,10 +156,15 @@ void MainWindow::readData()
     ui->textBrowserASCII->insertPlainText(message);
     // Прокрутка вниз для отображения новых данных
     ui->textBrowserASCII->moveCursor(QTextCursor::End);
+    if (isCorrectData(data)){
+        classInformationSensor informationSensor = translateASCII(message);
+        ui->textBrowserResult->append(informationSensor.classToString());
+        writeJSON(informationSensor);
+    }
+    else{
+        ui->textBrowserResult->append("Некорректные данные.");
+    }
 
-    classInformationSensor informationSensor = translateASCII(message);
-    ui->textBrowserResult->append(informationSensor.classToString());
-    writeJSON(informationSensor);
 }
 
 // запись в JSON
@@ -159,7 +179,6 @@ void MainWindow::writeJSON(const classInformationSensor& data)
     if (file.open(QIODevice::ReadOnly)) {
         QByteArray fileData = file.readAll();
         file.close();
-
         // Чтение существующего массива JSON
         QJsonDocument doc = QJsonDocument::fromJson(fileData);
         if (!doc.isNull() && doc.isArray()) {
@@ -183,7 +202,7 @@ classInformationSensor MainWindow::translateASCII(QString data)
 {
     classInformationSensor informationSensor;
     QString nameSensor = "WMT700";
-    if (data.startsWith("$") && data.endsWith("\r\n")){
+    if (isCorrectData(data)){
         data = data.mid(1,(data.length()-3));
         QStringList listData = data.split(",");
         informationSensor.setInformation(QDateTime::currentDateTime(), nameSensor, listData.first().toFloat(), listData.last().toFloat());
@@ -220,7 +239,6 @@ void MainWindow::on_comboBoxComPorts_activated(int index)
             serialPort.close();
             tmpPort.close();
             serialPort.setPortName(newNamePort);
-            // serialPort.setPort(listAvailableComPort[index]);
             serialPort.open(QIODevice::ReadWrite);
         }
     }

@@ -12,6 +12,7 @@
 #include <classinformationsensor.h>
 #include <QDir>
 #include <QJsonArray>
+#include <QRegularExpression>
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -32,6 +33,7 @@ public:
     void updateComPorts();
     void getPathToSaveJSON();
     QList<qint32> getBaudRatesComPort();
+    bool isCorrectData(const QString& data);
     void readData();
     void showDataASCII(QString);
     void writeJSON(const classInformationSensor&);

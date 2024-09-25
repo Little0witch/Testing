@@ -16,7 +16,7 @@ classInformationSensor::classInformationSensor(const QDateTime& time, const QStr
     this->windDirection = direction;
 }
 
-// геттер
+// геттер времени
 QDateTime classInformationSensor::getTime() const{
     return time;
 }
@@ -26,37 +26,37 @@ QString classInformationSensor::getNameSensor() const{
     return nameSensor;
 }
 
-// геттер
+// геттер скорости
 float classInformationSensor::getWindSpeed() const{
     return windSpeed;
 }
 
-// геттер
+// геттер направления ветра
 float classInformationSensor::getWindDirection() const{
     return windDirection;
 }
 
-// сеттер
+// сеттер времени
 void classInformationSensor::setTime(const QDateTime& time){
     this->time = time;
 }
 
-// сеттер
+// сеттер имени сенсора
 void classInformationSensor::setNameSensor(const QString& name){
     this->nameSensor = name;
 }
 
-// сеттер
+// сеттер скорости
 void classInformationSensor::setWindSpeed(float speed){
     this->windSpeed = speed;
 }
 
-// сеттер
+// сеттер направления
 void classInformationSensor::setWindDirection(float direction){
     this->windDirection = direction;
 }
 
-// сеттер
+// сеттер всех параметров
 void classInformationSensor::setInformation(const QDateTime& time, const QString& name, float speed, float direction){
     setTime(time);
     setNameSensor(name);
