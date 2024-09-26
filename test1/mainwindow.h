@@ -38,6 +38,7 @@ public:
     void showDataASCII(QString);
     void writeJSON(const classInformationSensor&);
     classInformationSensor translateASCII(QString);
+    void showResult(const classInformationSensor& data);
 
 private slots:
     void on_comboBoxSpeed_activated(int index);

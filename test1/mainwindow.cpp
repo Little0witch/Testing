@@ -152,13 +152,12 @@ void MainWindow::readData()
 {
     QByteArray data = serialPort.readAll();
     QString message = QString::fromUtf8(data);
-
     ui->textBrowserASCII->insertPlainText(message);
     // Прокрутка вниз для отображения новых данных
     ui->textBrowserASCII->moveCursor(QTextCursor::End);
     if (isCorrectData(data)){
         classInformationSensor informationSensor = translateASCII(message);
-        ui->textBrowserResult->append(informationSensor.classToString());
+        showResult(informationSensor);
         writeJSON(informationSensor);
     }
     else{
@@ -167,14 +166,26 @@ void MainWindow::readData()
 
 }
 
+void MainWindow::showResult(const classInformationSensor& data)
+{
+    QString time = "Время: " + data.getTime().toString("hh:mm:ss");
+    QString windSpeed = "Скорсть ветра (среднее значение): " + QString::number(data.getWindSpeed()) + " м/с";
+    QString windDirection = "Направление ветра (среднее значение): " + QString::number(data.getWindDirection()) + "°" ;
+    ui->textBrowserResult->append(time);
+    ui->textBrowserResult->append(windSpeed);
+    ui->textBrowserResult->append(windDirection);
+    ui->textBrowserResult->append("");
+}
+
 // запись в JSON
 void MainWindow::writeJSON(const classInformationSensor& data)
 {
     QJsonObject newEntry;
-    newEntry["time"] = data.getTime().toString(Qt::ISODate);
+    newEntry["Time"] = data.getTime().toString(Qt::ISODate);
     newEntry["name_sensor"] = data.getNameSensor();
-    newEntry["speed"] = data.getWindSpeed();
-    newEntry["direction"] = data.getWindDirection();
+    newEntry["speed"] = QString::number(data.getWindSpeed(), 'f', 2);
+    newEntry["direction"] = QString::number(data.getWindDirection(), 'f', 2);
+
     QFile file(pathToSaveJSON);
     if (file.open(QIODevice::ReadOnly)) {
         QByteArray fileData = file.readAll();

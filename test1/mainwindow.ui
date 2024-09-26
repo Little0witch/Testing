@@ -32,9 +32,9 @@
    <widget class="QFrame" name="frameSettings">
     <property name="geometry">
      <rect>
-      <x>30</x>
+      <x>10</x>
       <y>20</y>
-      <width>171</width>
+      <width>201</width>
       <height>151</height>
      </rect>
     </property>
@@ -52,7 +52,7 @@
       <rect>
        <x>10</x>
        <y>0</y>
-       <width>71</width>
+       <width>101</width>
        <height>41</height>
       </rect>
      </property>
@@ -60,13 +60,13 @@
       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Settings by port&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
      <property name="text">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;Settings&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;Настройки&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
     </widget>
     <widget class="QComboBox" name="comboBoxComPorts">
      <property name="geometry">
       <rect>
-       <x>80</x>
+       <x>110</x>
        <y>40</y>
        <width>76</width>
        <height>30</height>
@@ -83,13 +83,13 @@
       </rect>
      </property>
      <property name="text">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;Port&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;Порт&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
     </widget>
     <widget class="QComboBox" name="comboBoxSpeed">
      <property name="geometry">
       <rect>
-       <x>80</x>
+       <x>110</x>
        <y>90</y>
        <width>76</width>
        <height>30</height>
@@ -101,12 +101,12 @@
       <rect>
        <x>10</x>
        <y>90</y>
-       <width>61</width>
+       <width>91</width>
        <height>31</height>
       </rect>
      </property>
      <property name="text">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;Speed&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;Скорость&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
     </widget>
    </widget>
@@ -178,12 +178,12 @@
       <rect>
        <x>10</x>
        <y>0</y>
-       <width>61</width>
+       <width>91</width>
        <height>31</height>
       </rect>
      </property>
      <property name="text">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;Result&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;Результат&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
     </widget>
     <widget class="QTextBrowser" name="textBrowserResult">
